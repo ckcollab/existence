@@ -8,14 +8,22 @@ try:
 except IOError, ImportError:
     long_description = ''
 
+entry_points = {
+    'console_scripts': [
+        'existence = existence:main',
+    ]
+}
+
 setup(
     install_requires = [
         "lxml>=3.3.4",
-        "cssselect>=0.9.1"
+        "cssselect>=0.9.1",
+        "progressbar==2.3"
     ],
     name="existence",
     py_modules=["existence"],
-    version="0.0.9",
+    entry_points=entry_points,
+    version="0.1.2",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",

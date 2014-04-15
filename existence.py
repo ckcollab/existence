@@ -4,12 +4,14 @@ import platform
 import sys
 import urllib2
 
+from progressbar import ProgressBar, SimpleProgress
 from threading import Thread
 
 
 ROOT_DIRECTORY = ''
 URL_CACHE = []
 BROKEN_URLS = []
+SHOW_PROGRESS_BAR = True
 
 
 def directory_get_urls(directory):
@@ -86,6 +88,12 @@ def check_urls(urls):
     expected format of urls is list of tuples (url, file name, source line) i.e. ("google.com", "index.html", 32)
     '''
     threads = list()
+    progress_bar = None
+    progress_counter = 0
+
+    if SHOW_PROGRESS_BAR and len(urls) > 0:
+        widgets = [SimpleProgress()]
+        progress_bar = ProgressBar(widgets=widgets, maxval=len(urls)).start()
 
     for u in urls:
         t = Thread(target=async_check_url, args=(u[0], u[1], u[2]))
@@ -93,7 +101,14 @@ def check_urls(urls):
         threads.append(t)
 
     for thread in threads:
+        if SHOW_PROGRESS_BAR and len(urls) > 0:
+            progress_counter = progress_counter + 1
+            progress_bar.update(progress_counter)
+
         thread.join()
+
+    if SHOW_PROGRESS_BAR and len(urls) > 0:
+        progress_bar.finish()
 
 
 def scan_directory_for_bad_urls(directory):
@@ -103,7 +118,7 @@ def scan_directory_for_bad_urls(directory):
     return BROKEN_URLS
 
 
-if __name__ == '__main__':
+def main():
     if len(sys.argv) == 1:
         print 'Existence requires a directory as an argument!'
         exit(-1)
@@ -123,6 +138,11 @@ if __name__ == '__main__':
     scan_directory_for_bad_urls(ROOT_DIRECTORY)
 
     if len(BROKEN_URLS) > 0:
-        print BROKEN_URLS
+        for url in BROKEN_URLS:
+            print "Broken link found in file %s on line %s linking to %s" % (url[1], url[2], url[0])
     else:
         print "All of your links exist!"
+
+
+#if __name__ == '__main__':
+#    main()

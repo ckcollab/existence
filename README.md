@@ -15,7 +15,7 @@ Checks static html files for bad or empty links. See [here](http://www.ericcarmi
 
 Command line
 
-    > python existence.py /path/to/dir
+    > existence /path/to/dir
 
 Python
 
