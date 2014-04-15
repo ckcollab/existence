@@ -29,14 +29,6 @@ def directory_get_urls(directory):
     return urls
 
 
-def bad_url_exception_handler(request, exception):
-    broken_link_exception(request.url, request.kwargs["file_name"], request.kwargs["line_number"])
-
-
-def broken_link_exception(url, file_name, line_number):
-    raise Exception("Broken link found in file %s on line %s linking to %s" % (file_name, line_number, url))
-
-
 def is_valid_url(url):
     if url.startswith("#"):
         return False
@@ -67,7 +59,7 @@ def parse_html_urls(file_name, html_data):
         for a in anchor_tags:
             # A link was started but not finished, href with nothing set!
             if not 'href' in a.attrib or a.attrib['href'] == '':
-                broken_link_exception(file_name, a.sourceline, 'NOTHING!')
+                BROKEN_URLS.append(('None', file_name, a.sourceline))
 
             url = clean_url(a.attrib['href'])
 
@@ -83,14 +75,10 @@ def parse_html_urls(file_name, html_data):
 
 
 def async_check_url(url, file_name, line_number):
-    print "Checking: %s" % url
-
     try:
-        response = urllib2.urlopen(url)
+        urllib2.urlopen(url)
     except urllib2.URLError:
-        broken_link_exception(url, file_name, line_number)
-
-    response.close()
+        BROKEN_URLS.append((url, file_name, line_number))
 
 
 def check_urls(urls):
@@ -108,9 +96,11 @@ def check_urls(urls):
         thread.join()
 
 
-def check_directory(directory):
+def get_bad_urls(directory):
     urls = directory_get_urls(directory)
     check_urls(urls)
+
+    return BROKEN_URLS
 
 
 if __name__ == '__main__':
@@ -130,6 +120,9 @@ if __name__ == '__main__':
 
     print "Checking links..."
 
-    check_directory(ROOT_DIRECTORY)
+    get_bad_urls(ROOT_DIRECTORY)
 
-    print "All of your links exist!"
+    if len(BROKEN_URLS) > 0:
+        print BROKEN_URLS
+    else:
+        print "All of your links exist!"
