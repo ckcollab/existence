@@ -23,7 +23,7 @@ setup(
     name="existence",
     py_modules=["existence"],
     entry_points=entry_points,
-    version="0.1.2",
+    version="0.1.3",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",
