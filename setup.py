@@ -15,7 +15,7 @@ setup(
     ],
     name="existence",
     py_modules=["existence"],
-    version="0.0.8",
+    version="0.0.9",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",
