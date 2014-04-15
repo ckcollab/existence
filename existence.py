@@ -29,27 +29,9 @@ def directory_get_urls(directory):
     return urls
 
 
-def is_valid_url(url):
-    if url.startswith("#"):
-        return False
-
-    if url.startswith("mailto"):
-        return False
-
-    return True
-
-
-def clean_url(url):
-    if platform.system() == "Windows":
-        if url.startswith("C:\\"):
-            url = url.replace("C:\\", "file:///C:/")
-
-    return url
-
-
 def parse_html_urls(file_name, html_data):
     '''
-    Should return the line # where the
+    Returns a list of tuples in the form (url, file_name, line_number)
     '''
     try:
         urls = []
@@ -74,6 +56,24 @@ def parse_html_urls(file_name, html_data):
         pass
 
 
+def is_valid_url(url):
+    if url.startswith("#"):
+        return False
+
+    if url.startswith("mailto"):
+        return False
+
+    return True
+
+
+def clean_url(url):
+    if platform.system() == "Windows":
+        if url.startswith("C:\\"):
+            url = url.replace("C:\\", "file:///C:/")
+
+    return url
+
+
 def async_check_url(url, file_name, line_number):
     try:
         urllib2.urlopen(url)
@@ -96,7 +96,7 @@ def check_urls(urls):
         thread.join()
 
 
-def get_bad_urls(directory):
+def scan_directory_for_bad_urls(directory):
     urls = directory_get_urls(directory)
     check_urls(urls)
 
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 
     print "Checking links..."
 
-    get_bad_urls(ROOT_DIRECTORY)
+    scan_directory_for_bad_urls(ROOT_DIRECTORY)
 
     if len(BROKEN_URLS) > 0:
         print BROKEN_URLS
