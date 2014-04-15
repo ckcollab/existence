@@ -1,5 +1,6 @@
 import lxml.html
 import os
+import platform
 import sys
 import urllib2
 
@@ -7,7 +8,8 @@ from threading import Thread
 
 
 ROOT_DIRECTORY = ''
-URL_CACHE = {}
+URL_CACHE = []
+BROKEN_URLS = []
 
 
 def directory_get_urls(directory):
@@ -35,11 +37,22 @@ def broken_link_exception(url, file_name, line_number):
     raise Exception("Broken link found in file %s on line %s linking to %s" % (file_name, line_number, url))
 
 
-def is_url_remote(url):
-    if url.startswith("http://") or url.startswith("https://"):
-        return True
+def is_valid_url(url):
+    if url.startswith("#"):
+        return False
 
-    return False
+    if url.startswith("mailto"):
+        return False
+
+    return True
+
+
+def clean_url(url):
+    if platform.system() == "Windows":
+        if url.startswith("C:\\"):
+            url = url.replace("C:\\", "file:///C:/")
+
+    return url
 
 
 def parse_html_urls(file_name, html_data):
@@ -56,11 +69,12 @@ def parse_html_urls(file_name, html_data):
             if not 'href' in a.attrib or a.attrib['href'] == '':
                 broken_link_exception(file_name, a.sourceline, 'NOTHING!')
 
-            url = a.attrib['href']
+            url = clean_url(a.attrib['href'])
 
-            if is_url_remote(url):
-                if not any(url == u[0] for u in urls):
+            if is_valid_url(url):
+                if not any(url == u for u in URL_CACHE):
                     urls.append((url, file_name, a.sourceline))
+                    URL_CACHE.append(url)
 
         return urls
 
@@ -69,17 +83,19 @@ def parse_html_urls(file_name, html_data):
 
 
 def async_check_url(url, file_name, line_number):
-    response = urllib2.urlopen(url)
-
     print "Checking: %s" % url
 
-    if response.code != 200:
+    try:
+        response = urllib2.urlopen(url)
+    except urllib2.URLError:
         broken_link_exception(url, file_name, line_number)
+
+    response.close()
 
 
 def check_urls(urls):
     '''
-    expected format of urls is tuple (url, file name, source line) i.e. ("google.com", "index.html", 32)
+    expected format of urls is list of tuples (url, file name, source line) i.e. ("google.com", "index.html", 32)
     '''
     threads = list()
 

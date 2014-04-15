@@ -1,7 +1,12 @@
 import os
 from setuptools import setup
 
-readme = open(os.path.join(os.path.dirname(__file__), "README.md")).read()
+
+try:
+    with open('README.md') as readme:
+        long_description = readme.read()
+except IOError, ImportError:
+    long_description = ''
 
 setup(
     install_requires = [
@@ -10,11 +15,11 @@ setup(
     ],
     name="existence",
     py_modules=["existence"],
-    version="0.0.4",
+    version="0.0.7",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",
-    long_description=readme,
+    long_description=long_description,
     license="MIT",
     keywords="link checker",
     url="https://github.com/ckcollab/existence",
