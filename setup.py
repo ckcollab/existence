@@ -4,9 +4,13 @@ from setuptools import setup
 readme = open(os.path.join(os.path.dirname(__file__), "README.md")).read()
 
 setup(
+    install_requires = [
+        "lxml>=3.3.4",
+        "cssselect>=0.9.1"
+    ],
     name="existence",
     py_modules=["existence"],
-    version="0.0.1",
+    version="0.0.4",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",
