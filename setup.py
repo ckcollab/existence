@@ -5,7 +5,7 @@ from setuptools import setup
 try:
     with open('README.md') as readme:
         long_description = readme.read()
-except IOError, ImportError:
+except (IOError, ImportError):
     long_description = ''
 
 entry_points = {
@@ -23,7 +23,7 @@ setup(
     name="existence",
     py_modules=["existence"],
     entry_points=entry_points,
-    version="0.1.3",
+    version="0.1.5",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",

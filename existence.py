@@ -4,14 +4,13 @@ import platform
 import sys
 import urllib2
 
-from progressbar import ProgressBar, SimpleProgress
 from threading import Thread
 
 
 ROOT_DIRECTORY = ''
-URL_CACHE = []
+URL_CACHE = set()
 BROKEN_URLS = []
-SHOW_PROGRESS_BAR = True
+SHOW_PROGRESS_BAR = False
 
 
 def directory_get_urls(directory):
@@ -48,9 +47,9 @@ def parse_html_urls(file_name, html_data):
             url = clean_url(a.attrib['href'])
 
             if is_valid_url(url):
-                if not any(url == u for u in URL_CACHE):
+                if url not in URL_CACHE:
                     urls.append((url, file_name, a.sourceline))
-                    URL_CACHE.append(url)
+                    URL_CACHE.add(url)
 
         return urls
 
@@ -78,6 +77,7 @@ def clean_url(url):
 
 def async_check_url(url, file_name, line_number):
     try:
+        print 'checking %s' % url
         urllib2.urlopen(url)
     except urllib2.URLError:
         BROKEN_URLS.append((url, file_name, line_number))
@@ -92,6 +92,7 @@ def check_urls(urls):
     progress_counter = 0
 
     if SHOW_PROGRESS_BAR and len(urls) > 0:
+        from progressbar import ProgressBar, SimpleProgress
         widgets = [SimpleProgress()]
         progress_bar = ProgressBar(widgets=widgets, maxval=len(urls)).start()
 
@@ -111,7 +112,10 @@ def check_urls(urls):
         progress_bar.finish()
 
 
-def scan_directory_for_bad_urls(directory):
+def scan(directory):
+    '''
+    Scans directory for bad links and returns the list of broken urls
+    '''
     urls = directory_get_urls(directory)
     check_urls(urls)
 
@@ -135,7 +139,7 @@ def main():
 
     print "Checking links..."
 
-    scan_directory_for_bad_urls(ROOT_DIRECTORY)
+    scan(ROOT_DIRECTORY)
 
     if len(BROKEN_URLS) > 0:
         for url in BROKEN_URLS:
@@ -146,5 +150,5 @@ def main():
         print "All of your links exist!"
 
 
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()

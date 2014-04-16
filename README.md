@@ -1,7 +1,8 @@
 existence
 =========
 
-Checks static html files for bad or empty links. See [here](http://www.ericcarmichael.com/writing-my-first-python-package.html) why I wrote this, I hate missing details!
+Recursively scans directories for static html files for bad or empty links. See
+[here](http://www.ericcarmichael.com/writing-my-first-python-package.html) why I wrote this, I hate missing details!
 
 # Example bad or empty links
 
@@ -20,11 +21,16 @@ Command line
 Python
 
 ```python
-from existence import check_directory
-check_directory("/path/to/dir")
+from existence import scan
+scan("/path/to/dir")
 ```
 
-Existence will recursively check each subdir as well!
+# Options
+
+
+`existence.SHOW_PROGRESS_BAR`
+
+Default is **False**, set to True to show a handy progress bar. Requires `progressbar`
 
 
 # Running tests
