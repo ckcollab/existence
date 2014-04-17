@@ -14,6 +14,12 @@ SHOW_PROGRESS_BAR = False
 
 
 def directory_get_urls(directory):
+    if not os.path.exists(directory):
+        raise ValueError('Existence cannot find the directory %s' % directory)
+
+    if not os.path.isdir(directory):
+        raise ValueError('Existence requires a directory as an argument!')
+
     for root, subFolders, files in os.walk(directory):
         for f in files:
             if f.endswith(".html"):
@@ -120,17 +126,14 @@ def main():
 
     ROOT_DIRECTORY = sys.argv[1]
 
-    if not os.path.exists(ROOT_DIRECTORY):
-        print 'Existence cannot find the directory %s' % ROOT_DIRECTORY
-        exit(-1)
-
-    if not os.path.isdir(ROOT_DIRECTORY):
-        print 'Existence requires a directory as an argument!'
-        exit(-1)
 
     print "Checking links..."
 
-    scan(ROOT_DIRECTORY)
+    try:
+        scan(ROOT_DIRECTORY)
+    except ValueError, e:
+        print e.message
+        exit(-1)
 
     if len(BROKEN_URLS) > 0:
         for url in BROKEN_URLS:
