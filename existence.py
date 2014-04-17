@@ -69,7 +69,6 @@ def clean_url(url):
 
 def async_check_url(url, file_name, line_number):
     try:
-        print 'checking %s' % url
         urllib2.urlopen(url)
     except urllib2.URLError:
         BROKEN_URLS.append((url, file_name, line_number))
