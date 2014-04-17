@@ -20,7 +20,6 @@ def directory_get_urls(directory):
                 full_path = os.path.join(root, f)
 
                 with open(full_path, 'r+') as fin:
-
                     for u in parse_html_urls(full_path, fin.read()):
                         yield u
 
