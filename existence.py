@@ -14,8 +14,6 @@ SHOW_PROGRESS_BAR = False
 
 
 def directory_get_urls(directory):
-    urls = []
-
     for root, subFolders, files in os.walk(directory):
         for f in files:
             if f.endswith(".html"):
@@ -25,9 +23,8 @@ def directory_get_urls(directory):
                     new_urls = parse_html_urls(full_path, fin.read())
 
                     if new_urls:
-                        urls = urls + new_urls
-
-    return urls
+                        for u in new_urls:
+                            yield u
 
 
 def parse_html_urls(file_name, html_data):
@@ -116,7 +113,7 @@ def scan(directory):
     '''
     Scans directory for bad links and returns the list of broken urls
     '''
-    urls = directory_get_urls(directory)
+    urls = list(directory_get_urls(directory))
     check_urls(urls)
 
     return BROKEN_URLS
