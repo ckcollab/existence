@@ -20,11 +20,9 @@ def directory_get_urls(directory):
                 full_path = os.path.join(root, f)
 
                 with open(full_path, 'r+') as fin:
-                    new_urls = parse_html_urls(full_path, fin.read())
 
-                    if new_urls:
-                        for u in new_urls:
-                            yield u
+                    for u in parse_html_urls(full_path, fin.read()):
+                        yield u
 
 
 def parse_html_urls(file_name, html_data):
@@ -32,7 +30,6 @@ def parse_html_urls(file_name, html_data):
     Returns a list of tuples in the form (url, file_name, line_number)
     '''
     try:
-        urls = []
         html = lxml.html.fromstring(html_data)
         anchor_tags = html.cssselect('a')
 
@@ -45,10 +42,9 @@ def parse_html_urls(file_name, html_data):
 
             if is_valid_url(url):
                 if url not in URL_CACHE:
-                    urls.append((url, file_name, a.sourceline))
                     URL_CACHE.add(url)
 
-        return urls
+                    yield (url, file_name, a.sourceline)
 
     except SyntaxError:
         pass
