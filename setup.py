@@ -17,13 +17,12 @@ entry_points = {
 setup(
     install_requires = [
         "lxml>=3.3.4",
-        "cssselect>=0.9.1",
-        "progressbar==2.3"
+        "cssselect>=0.9.1"
     ],
     name="existence",
     py_modules=["existence"],
     entry_points=entry_points,
-    version="0.1.7",
+    version="0.1.8",
     author="Eric Carmichael",
     author_email="eric@ckcollab.com",
     description="Checks static .html files for bad links",
