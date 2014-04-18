@@ -28,8 +28,10 @@ Recursively scans directories for static html files for bad or empty links. See
 >>> scan("/path/to/dir")
 []
 >>> scan("/path/to/an/error")
-[('None', '/path/to/an/error/index.html', 121), ('non-existant.html', '/path/to/an/error/other.html', 22)]
-
+[
+    ('None', '/path/to/an/error/index.html', 121),
+    ('non-existant.html', '/path/to/an/error/other.html', 22)
+]
 # Returns list of tuples: [(url, file_name, line_number)]
 ```
 
