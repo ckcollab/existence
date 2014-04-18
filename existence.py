@@ -10,7 +10,12 @@ from threading import Thread
 ROOT_DIRECTORY = ''
 URL_CACHE = set()
 BROKEN_URLS = []
-SHOW_PROGRESS_BAR = False
+
+try:
+    from progressbar import ProgressBar, SimpleProgress
+    SHOW_PROGRESS_BAR = True
+except ImportError:
+    SHOW_PROGRESS_BAR = False
 
 
 def directory_get_urls(directory):
@@ -76,7 +81,7 @@ def clean_url(url):
 def async_check_url(url, file_name, line_number):
     try:
         urllib2.urlopen(url)
-    except urllib2.URLError:
+    except (ValueError, urllib2.URLError):
         BROKEN_URLS.append((url, file_name, line_number))
 
 
@@ -89,7 +94,7 @@ def check_urls(urls):
     progress_counter = 0
 
     if SHOW_PROGRESS_BAR and len(urls) > 0:
-        from progressbar import ProgressBar, SimpleProgress
+
         widgets = [SimpleProgress()]
         progress_bar = ProgressBar(widgets=widgets, maxval=len(urls)).start()
 

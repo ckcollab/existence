@@ -14,23 +14,28 @@ Recursively scans directories for static html files for bad or empty links. See
 
 # Usage
 
-Command line
+## Command line
 
     > existence /path/to/dir
+    Checking links...
+    57 of 57
+    All of your links exist!
 
-Python
+## Python
 
 ```python
-from existence import scan
-scan("/path/to/dir")
+>>> from existence import scan
+>>> scan("/path/to/dir")
+[]
+>>> scan("/path/to/an/error")
+[('None', '/path/to/an/error/index.html', 121), ('non-existant.html', '/path/to/an/error/other.html', 22)]
+
+# Returns list of tuples: [(url, file_name, line_number)]
 ```
 
-# Options
+# Progress bar
 
-
-`existence.SHOW_PROGRESS_BAR`
-
-Default is **False**, set to True to show a handy progress bar. Requires `progressbar`
+To enable the progress bar `pip install progressbar==2.3`
 
 
 # Running tests
