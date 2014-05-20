@@ -141,8 +141,10 @@ def main():
         exit(-1)
 
     if len(BROKEN_URLS) > 0:
+        print "Broken links:"
+
         for url in BROKEN_URLS:
-            print "Broken link found in file %s on line %s linking to %s" % (url[1], url[2], url[0])
+            print "%s on line %s linking to %s" % (url[1], url[2], url[0])
 
         exit(-1)
     else:
