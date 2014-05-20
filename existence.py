@@ -144,7 +144,7 @@ def main():
         print "Broken links:"
 
         for url in BROKEN_URLS:
-            print "%s on line %s linking to %s" % (url[1], url[2], url[0])
+            print "    %s@%s '%s'" % (url[1], url[2], url[0])
 
         exit(-1)
     else:

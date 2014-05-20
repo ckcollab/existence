@@ -20,8 +20,9 @@ Recursively scans directories for static html files for bad or empty links. See
     All of your links exist!
 
     > existence /path/to/bad/links
-    Broken link found in file /path/to/bad/links/index.html on line 121 linking to None
-    Broken link found in file /path/to/bad/links/other.html on line 22 linking to non-existant.html
+    Broken links:
+        /path/to/bad/links/index.html@121 'None'
+        /path/to/bad/links/other.html@22 'non-existant.html'
 
 ## Python
 
