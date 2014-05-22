@@ -14,12 +14,14 @@ Recursively scans directories for static html files for bad or empty links. See
 
 ## Command line
 
-    > existence /path/to/dir
+    $ existence /path/to/dir
     Checking links...
     57 of 57
     All of your links exist!
 
-    > existence /path/to/bad/links
+    $ existence /path/to/bad/links
+    Checking links...
+    23 of 23
     Broken links:
         /path/to/bad/links/index.html@121 'None'
         /path/to/bad/links/other.html@22 'non-existant.html'
