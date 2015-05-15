@@ -30,7 +30,7 @@ Recursively scans directories for static html files for bad or empty links. See
 
 ```python
 >>> from existence import scan
->>> scan("/path/to/dir")
+>>> scan("/path/to/working/links")
 []
 >>> scan("/path/to/bad/links")
 [
