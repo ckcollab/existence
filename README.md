@@ -14,7 +14,7 @@ Recursively scans directories for static html files for bad or empty links. See
 
 ## Command line
 
-    $ existence /path/to/dir
+    $ existence /path/to/working/links
     Checking links...
     57 of 57
     All of your links exist!
