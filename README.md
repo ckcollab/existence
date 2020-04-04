@@ -48,3 +48,10 @@ To enable the progress bar `pip install progressbar==2.3`
 # Running tests
 
     > python -m unittest discover
+
+# Deploying new release
+
+```bash
+$ python setup.py sdist
+$ twine upload dist/*
+```
